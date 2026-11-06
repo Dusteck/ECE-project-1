@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Management System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+
+    .tabs {
+      display: flex;
+      background: #f5f5f5;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      background: #f5f5f5;
+      border: none;
+      font-size: 1em;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s;
+    }
+
+    .tab:hover {
+      background: #e0e0e0;
+    }
+
+    .tab.active {
+      background: white;
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 30px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-section {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .form-section h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="datetime-local"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    button.danger {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .alert.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .data-display {
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .data-display h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #667eea;
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background: #f5f5f5;
+    }
+
+    .no-data {
+      text-align: center;
+      color: #999;
+      padding: 30px;
+      font-style: italic;
+    }
+
+    .member-input-group {
+      background: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border: 2px solid #e0e0e0;
+    }
+
+    .member-input-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .remove-member {
+      background: #f5576c;
+      padding: 5px 15px;
+      font-size: 0.9em;
+    }
+
+    .add-member {
+      margin-top: 10px;
+      background: #28a745;
+    }
+
+    .inline-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      align-items: end;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #667eea;
+      font-size: 1.1em;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .inline-form {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        flex: 1 1 33%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Course Management System</h1>
+    <p class="subtitle">Manage courses, members, sign-up sheets, and grading</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('courses')">Courses</button>
+    <button class="tab" onclick="switchTab('members')">Members</button>
+    <button class="tab" onclick="switchTab('sheets')">Sign-up Sheets</button>
+    <button class="tab" onclick="switchTab('slots')">Slots & Signups</button>
+    <button class="tab" onclick="switchTab('grading')">Grading</button>
+    <button class="tab" onclick="switchTab('view')">View Data</button>
+  </div>
+
+  <!-- Courses Tab -->
+  <div id="courses-tab" class="tab-content active">
+    <div class="form-section">
+      <h2>Create New Course</h2>
+      <div id="create-course-alert" class="alert"></div>
+      <form id="create-course-form">
+        <div class="form-group">
+          <label for="course-term">Term Code (1-9999) *</label>
+          <input type="number" id="course-term" required min="1" max="9999" placeholder="e.g., 1259">
+        </div>
+        <div class="form-group">
+          <label for="course-name">Course Name (max 100 chars) *</label>
+          <input type="text" id="course-name" required maxlength="100" placeholder="e.g., SE 3316">
+        </div>
+        <div class="form-group">
+          <label for="course-section">Section (1-99, default 1)</label>
+          <input type="number" id="course-section" min="1" max="99" placeholder="1">
+        </div>
+        <button type="submit">Create Course</button>
+      </form>
+    </div>
+
+    <div class="form-section">
+      <h2>Delete Course</h2>
+      <div id="delete-course-alert" class="alert"></div>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="delete-term">Term Code *</label>
+          <input type="number" id="delete-term" required min="1" max="9999">
+        </div>
+        <div class="form-group">
+          <label for="delete-section">Section (default 1)</label>
+          <input type="number" id="delete-section" min="1" max="99" placeholder="1">
+        </div>
+        <button class="danger" onclick="deleteCourse()">Delete Course</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Members Tab -->
+  <div id="members-tab" class="tab-content">
+    <div class="form-section">
+      <h2>Add Members to Course</h2>
+      <div id="add-members-alert" class="alert"></div>
+      <div class="form-group">
+        <label for="members-term">Term Code *</label>
+        <input type="number" id="members-term" required min="1" max="9999">
+      </div>
+      <div class="form-group">
+        <label for="members-section">Section (default 1)</label>
+        <input type="number" id="members-section" min="1" max="99" placeholder="1">
+      </div>
+
+      <div id="members-container">
+        <div class="member-input-group">
+          <div class="member-input-header">
+            <strong>Member 1</strong>
+          </div>
+          <div class="form-group">
+            <label>Member ID (8 chars) *</label>
+            <input type="text" class="member-id" required maxlength="8">
+          </div>
+          <div class="form-group">
+            <label>First Name (max 200 chars) *</label>
+            <input type="text" class="member-firstname" required maxlength="200">
+          </div>
+          <div class="form-group">
+            <label>Last Name (max 200 chars) *</label>
+            <input type="text" class="member-lastname" required maxlength="200">
+          </div>
+          <div class="form-group">
+            <label>Role (max 10 chars) *</label>
+            <input type="text" class="member-role" required maxlength="10" placeholder="e.g., Student, TA, Prof">
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="add-member" onclick="addMemberInput()">+ Add Another Member</button>
+        <button onclick="submitMembers()">Submit Members</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Delete Members</h2>
+      <div id="delete-members-alert" class="alert"></div>
+      <div class="form-group">
+        <label for="del-members-term">Term Code *</label>
+        <input type="number" id="del-members-term" required min="1" max="9999">
+      </div>
+      <div class="form-group">
+        <label for="del-members-section">Section (default 1)</label>
+        <input type="number" id="del-members-section" min="1" max="99" placeholder="1">
+      </div>
+      <div class="form-group">
+        <label for="del-member-ids">Member IDs (comma-separated) *</label>
+        <input type="text" id="del-member-ids" required placeholder="e.g., 12345678, 87654321">
+      </div>
+      <button class="danger" onclick="deleteMembers()">Delete Members</button>
+    </div>
+  </div>
+
+  <!-- Sign-up Sheets Tab -->
+  <div id="sheets-tab" class="tab-content">
+    <div class="form-section">
+      <h2>Create Sign-up Sheet</h2>
+      <div id="create-sheet-alert" class="alert"></div>
+      <form id="create-sheet-form">
+        <div class="form-group">
+          <label for="sheet-term">Term Code *</label>
+          <input type="number" id="sheet-term" required min="1" max="9999">
+        </div>
+        <div class="form-group">
+          <label for="sheet-section">Section (default 1)</label>
+          <input type="number" id="sheet-section" min="1" max="99" placeholder="1">
+        </div>
+        <div class="form-group">
+          <label for="sheet-assignment">Assignment Name (max 100 chars) *</label>
+          <input type="text" id="sheet-assignment" required maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="sheet-not-before">Sign-up Opens (not-before) *</label>
+          <input type="datetime-local" id="sheet-not-before" required>
+        </div>
+        <div class="form-group">
+          <label for="sheet-not-after">Sign-up Closes (not-after) *</label>
+          <input type="datetime-local" id="sheet-not-after" required>
+        </div>
+        <button type="submit">Create Sign-up Sheet</button>
+      </form>
+    </div>
+
+    <div class="form-section">
+      <h2>Delete Sign-up Sheet</h2>
+      <div id="delete-sheet-alert" class="alert"></div>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="delete-sheet-id">Sign-up Sheet ID *</label>
+          <input type="number" id="delete-sheet-id" required min="1">
+        </div>
+        <button class="danger" onclick="deleteSignupSheet()">Delete Sheet</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>View Sign-up Sheets for Course</h2>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="view-sheets-term">Term Code *</label>
+          <input type="number" id="view-sheets-term" required min="1" max="9999">
+        </div>
+        <div class="form-group">
+          <label for="view-sheets-section">Section (default 1)</label>
+          <input type="number" id="view-sheets-section" min="1" max="99" placeholder="1">
+        </div>
+        <button onclick="loadSignupSheets()">View Sheets</button>
+      </div>
+      <div id="sheets-display" class="data-display">
+        <div class="loading">Enter course details and click "View Sheets"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slots & Signups Tab -->
+  <div id="slots-tab" class="tab-content">
+    <div class="form-section">
+      <h2>Add Time Slots to Sign-up Sheet</h2>
+      <div id="add-slots-alert" class="alert"></div>
+      <form id="add-slots-form">
+        <div class="form-group">
+          <label for="slots-sheet-id">Sign-up Sheet ID *</label>
+          <input type="number" id="slots-sheet-id" required min="1">
+        </div>
+        <div class="form-group">
+          <label for="slots-start">Start Time *</label>
+          <input type="datetime-local" id="slots-start" required>
+        </div>
+        <div class="form-group">
+          <label for="slots-duration">Slot Duration (1-240 minutes) *</label>
+          <input type="number" id="slots-duration" required min="1" max="240" placeholder="60">
+        </div>
+        <div class="form-group">
+          <label for="slots-num">Number of Slots (1-99) *</label>
+          <input type="number" id="slots-num" required min="1" max="99" placeholder="10">
+        </div>
+        <div class="form-group">
+          <label for="slots-max">Max Members per Slot (1-99) *</label>
+          <input type="number" id="slots-max" required min="1" max="99" placeholder="1">
+        </div>
+        <button type="submit">Create Slots</button>
+      </form>
+    </div>
+
+    <div class="form-section">
+      <h2>Sign Up for a Slot</h2>
+      <div id="signup-alert" class="alert"></div>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="signup-sheet-id">Sign-up Sheet ID *</label>
+          <input type="number" id="signup-sheet-id" required min="1">
+        </div>
+        <div class="form-group">
+          <label for="signup-slot-id">Slot ID *</label>
+          <input type="number" id="signup-slot-id" required min="1">
+        </div>
+        <div class="form-group">
+          <label for="signup-member-id">Member ID *</label>
+          <input type="text" id="signup-member-id" required maxlength="8">
+        </div>
+        <button onclick="signupForSlot()">Sign Up</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Cancel Sign-up</h2>
+      <div id="cancel-signup-alert" class="alert"></div>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="cancel-sheet-id">Sign-up Sheet ID *</label>
+          <input type="number" id="cancel-sheet-id" required min="1">
+        </div>
+        <div class="form-group">
+          <label for="cancel-member-id">Member ID *</label>
+          <input type="text" id="cancel-member-id" required maxlength="8">
+        </div>
+        <button class="danger" onclick="cancelSignup()">Cancel Sign-up</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>View Slots for Sign-up Sheet</h2>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="view-slots-sheet-id">Sign-up Sheet ID *</label>
+          <input type="number" id="view-slots-sheet-id" required min="1">
+        </div>
+        <button onclick="loadSlots()">View Slots</button>
+      </div>
+      <div id="slots-display" class="data-display">
+        <div class="loading">Enter sign-up sheet ID and click "View Slots"</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Modify a Slot</h2>
+      <div id="modify-slot-alert" class="alert"></div>
+      <form id="modify-slot-form">
+        <div class="form-group">
+          <label for="modify-slot-id">Slot ID *</label>
+          <input type="number" id="modify-slot-id" required min="1">
+        </div>
+        <div class="form-group">
+          <label for="modify-start">New Start Time (optional)</label>
+          <input type="datetime-local" id="modify-start">
+        </div>
+        <div class="form-group">
+          <label for="modify-duration">New Duration (1-240 min, optional)</label>
+          <input type="number" id="modify-duration" min="1" max="240">
+        </div>
+        <div class="form-group">
+          <label for="modify-max">New Max Members (1-99, optional)</label>
+          <input type="number" id="modify-max" min="1" max="99">
+        </div>
+        <button type="submit">Modify Slot</button>
+      </form>
+    </div>
+
+    <div class="form-section">
+      <h2>Delete a Slot</h2>
+      <div id="delete-slot-alert" class="alert"></div>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="delete-slot-id">Slot ID *</label>
+          <input type="number" id="delete-slot-id" required min="1">
+        </div>
+        <button class="danger" onclick="deleteSlot()">Delete Slot</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grading Tab -->
+  <div id="grading-tab" class="tab-content">
+    <div class="form-section">
+      <h2>View Members in a Slot</h2>
+      <div id="view-slot-members-alert" class="alert"></div>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="grade-slot-id">Slot ID *</label>
+          <input type="number" id="grade-slot-id" required min="1">
+        </div>
+        <button onclick="loadSlotMembers()">View Members</button>
+      </div>
+      <div id="slot-members-display" class="data-display">
+        <div class="loading">Enter slot ID and click "View Members"</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Enter/Modify Grade & Comment</h2>
+      <div id="submit-grade-alert" class="alert"></div>
+      <form id="submit-grade-form">
+        <input type="hidden" id="grade-signup-sheet-id">
+        <div class="form-group">
+          <label for="grade-member-id">Member ID (8 chars) *</label>
+          <input type="text" id="grade-member-id" required maxlength="8" placeholder="Enter member ID from above table">
+        </div>
+        <div class="form-group">
+          <label for="grade-value">Grade (0-999) *</label>
+          <input type="number" id="grade-value" required min="0" max="999" placeholder="e.g., 85">
+        </div>
+        <div class="form-group">
+          <label for="grade-comment">Comment (max 500 chars, optional)</label>
+          <textarea id="grade-comment" maxlength="500" placeholder="Enter feedback or comments..."></textarea>
+        </div>
+        <button type="submit">Submit Grade</button>
+      </form>
+      <div style="margin-top: 15px; padding: 10px; background: #e8f4fd; border-radius: 5px;">
+        <strong>Note:</strong>
+        <ul style="margin-top: 10px; padding-left: 20px;">
+          <li>First, view members in a slot above to see current grades</li>
+          <li>If grade exists, new grade will update but original grade is returned</li>
+          <li>Comments are appended to existing comments (separated by newline)</li>
+          <li>All inputs are sanitized to prevent security issues</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Data Tab -->
+  <div id="view-tab" class="tab-content">
+    <div class="form-section">
+      <h2>View All Courses</h2>
+      <button onclick="loadCourses()">Refresh Courses</button>
+      <div id="courses-display" class="data-display">
+        <div class="loading">Click "Refresh Courses" to load data</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>View Course Members</h2>
+      <div class="inline-form">
+        <div class="form-group">
+          <label for="view-term">Term Code *</label>
+          <input type="number" id="view-term" required min="1" max="9999">
+        </div>
+        <div class="form-group">
+          <label for="view-section">Section (default 1)</label>
+          <input type="number" id="view-section" min="1" max="99" placeholder="1">
+        </div>
+        <div class="form-group">
+          <label for="view-role">Role (optional)</label>
+          <input type="text" id="view-role" maxlength="10" placeholder="Leave empty for all">
+        </div>
+        <button onclick="loadMembers()">View Members</button>
+      </div>
+      <div id="members-display" class="data-display">
+        <div class="loading">Enter course details and click "View Members"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="lab3.js"></script>
+</body>
+</html>
